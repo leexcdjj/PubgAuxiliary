@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Runtime.InteropServices;
 using WindowsInput;
 using WindowsInput.Native;
 
@@ -18,9 +12,9 @@ namespace ConsoleApp1
         /// <summary>
         /// 是否peek
         /// </summary>
-        public static bool IsPeek { get; set; } = false;
+        public static bool IsPeek { get; set; }
 
-        public static InputSimulator Simulator { get; set; } = new InputSimulator();
+        public static InputSimulator Simulator { get; set; } = new();
 
         public static PeekTypeEnum PeekType { get; set; } = PeekTypeEnum.Unknow;
 
@@ -68,7 +62,7 @@ namespace ConsoleApp1
                     // 站起逻辑
                     while (true)
                     {
-                        bool isUp = false;
+                        bool isUp;
                         
                         // 先是右键的
                         isUp = PressRight_PeekUp();
