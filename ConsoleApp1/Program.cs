@@ -106,10 +106,8 @@ namespace ConsoleApp1
                     
                     // 站起
                     Simulator.Keyboard.KeyDown(VirtualKeyCode.VK_A);
-                    Console.WriteLine("站起 a");
                     Thread.Sleep(30);
                     Simulator.Keyboard.KeyPress(VirtualKeyCode.VK_C);
-                    Console.WriteLine("站起 c");
                     Simulator.Keyboard.KeyUp(VirtualKeyCode.VK_A);
 
                     // 蹲下逻辑
@@ -147,10 +145,8 @@ namespace ConsoleApp1
                     
                     // 蹲下
                     Simulator.Keyboard.KeyDown(VirtualKeyCode.VK_D);
-                    Console.WriteLine("蹲下 d");
                     Thread.Sleep(30);
                     Simulator.Keyboard.KeyPress(VirtualKeyCode.VK_C);
-                    Console.WriteLine("蹲下 c");
                     Simulator.Keyboard.KeyUp(VirtualKeyCode.VK_D);
                 }
             }
@@ -251,14 +247,12 @@ namespace ConsoleApp1
                     (IsKeyDown(VirtualKeyCode.XBUTTON1) && IsKeyDown(VirtualKeyCode.VK_Q) && IsKeyDown(VirtualKeyCode.LBUTTON)))
                 {
                     Simulator.Keyboard.KeyPress(VirtualKeyCode.VK_C);
-                    Console.WriteLine("闪身 c");
 
                     while (true)
                     {
                         if (!IsKeyDown(VirtualKeyCode.LBUTTON))
                         {
                             Simulator.Keyboard.KeyPress(VirtualKeyCode.VK_C);
-                            Console.WriteLine("闪身 c");
                             break;
                         }
                     }
