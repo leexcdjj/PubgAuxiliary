@@ -1,6 +1,8 @@
 ﻿using System.Runtime.InteropServices;
+using ConsoleApp1.Configs;
 using WindowsInput;
 using WindowsInput.Native;
+using Microsoft.Extensions.Configuration;
 
 namespace ConsoleApp1
 {
@@ -17,7 +19,11 @@ namespace ConsoleApp1
         public static InputSimulator Simulator { get; set; } = new();
 
         public static PeekTypeEnum PeekType { get; set; } = PeekTypeEnum.Unknow;
-
+        
+        /// <summary>
+        /// 整个系统配置
+        /// </summary>
+        public static SystemConfig SystemConfiguration { get; set; }
 
         public static bool IsKeyDown(VirtualKeyCode key)
         {
@@ -28,7 +34,10 @@ namespace ConsoleApp1
         static void Main(string[] args)
         {
             Console.WriteLine("正常运行");
-
+            
+            // 配置文件
+            Configuration();
+            
             Thread sprayThread = new Thread(SprayThread);
             Thread peekThread = new Thread(PeekThread);
             Thread OneButtonPickUpGunThread = new Thread(OneButtonPickUpGun);
@@ -52,6 +61,24 @@ namespace ConsoleApp1
             }
         }
 
+        #region 配置文件
+
+        /// <summary>
+        /// 配置文件初始化
+        /// </summary>
+        static void Configuration()
+        {
+            // 初始化配置文件
+            var config = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .Build();
+            
+            SystemConfiguration  = config.Get<SystemConfig>();
+        }
+
+        #endregion
+        
+
         /// <summary>
         /// 一键捡枪
         /// </summary>
@@ -64,61 +91,20 @@ namespace ConsoleApp1
                 {
                     // 打开背包
                     Simulator.Keyboard.KeyPress(VirtualKeyCode.TAB);
-                    Thread.Sleep(60);
+                    Thread.Sleep(SystemConfiguration.Macro.OneButtonPickUpGun.BagSleep);
                     
                     // 拖动第一个
-                    Simulator.Mouse.MoveMouseTo(8000, 20000);
-                    Simulator.Mouse.LeftButtonDown();
-                    Simulator.Mouse.MoveMouseTo(38000, 20000);
-                    Thread.Sleep(30);
-                    Simulator.Mouse.LeftButtonUp();
-
-                    // 拖动之间的间隔延迟
-                    // 延迟20
-                    Thread.Sleep(20);
-
-                    // 拖动第二个
-                    Simulator.Mouse.MoveMouseTo(8000, 25000);
-                    Simulator.Mouse.LeftButtonDown();
-                    Simulator.Mouse.MoveMouseTo(38000, 20000);
-                    Thread.Sleep(30);
-                    Simulator.Mouse.LeftButtonUp();
-
-                    // 拖动之间的间隔延迟
-                    // 延迟20
-                    Thread.Sleep(20);
-
-                    // 拖动第三个
-                    Simulator.Mouse.MoveMouseTo(8000, 32000);
-                    Simulator.Mouse.LeftButtonDown();
-                    Simulator.Mouse.MoveMouseTo(38000, 20000);
-                    Thread.Sleep(30);
-                    Simulator.Mouse.LeftButtonUp();
-
-                    // 拖动之间的间隔延迟
-                    // 延迟20
-                    Thread.Sleep(20);
-
-                    // 拖动第四个
-                    Simulator.Mouse.MoveMouseTo(8000, 37000);
-                    Simulator.Mouse.LeftButtonDown();
-                    Simulator.Mouse.MoveMouseTo(38000, 20000);
-                    Thread.Sleep(30);
-                    Simulator.Mouse.LeftButtonUp();
-
-                    // 拖动之间的间隔延迟
-                    // 延迟20
-                    Thread.Sleep(20);
-
-                    // 拖动第五个
-                    Simulator.Mouse.MoveMouseTo(8000, 42000);
-                    Simulator.Mouse.LeftButtonDown();
-                    Simulator.Mouse.MoveMouseTo(38000, 20000);
-                    Thread.Sleep(30);
-                    Simulator.Mouse.LeftButtonUp();
-
-                    // 延迟20
-                    Thread.Sleep(50);
+                    foreach (var item in SystemConfiguration.Macro.OneButtonPickUpGun.MoveCoordinates)
+                    {
+                        Simulator.Mouse.MoveMouseTo(item.MoveStartX, item.MoveStartY);
+                        Simulator.Mouse.LeftButtonDown();
+                        Simulator.Mouse.MoveMouseTo(item.MoveEndX, item.MoveEndY);
+                        Thread.Sleep(SystemConfiguration.Macro.OneButtonPickUpGun.MoveSleep);
+                        Simulator.Mouse.LeftButtonUp();
+                        
+                        // 拖动之间的间隔
+                        Thread.Sleep(SystemConfiguration.Macro.OneButtonPickUpGun.MoveIntervalSleep);
+                    }
 
                     // 自动按r进行换枪
                     Simulator.Keyboard.KeyPress(VirtualKeyCode.VK_R);
