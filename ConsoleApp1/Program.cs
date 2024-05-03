@@ -31,9 +31,11 @@ namespace ConsoleApp1
 
             Thread sprayThread = new Thread(SprayThread);
             Thread peekThread = new Thread(PeekThread);
+            Thread OneButtonPickUpGunThread = new Thread(OneButtonPickUpGun);
 
             peekThread.Start();
             sprayThread.Start();
+            OneButtonPickUpGunThread.Start();
 
             while (true)
             {
@@ -46,6 +48,80 @@ namespace ConsoleApp1
                 {
                     IsPeek = false;
                     PeekType = PeekTypeEnum.Unknow;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 一键捡枪
+        /// </summary>
+        static void OneButtonPickUpGun()
+        {
+            while (true)
+            {
+                if (IsKeyDown(VirtualKeyCode.XBUTTON1) && IsKeyDown(VirtualKeyCode.VK_R) &&
+                    IsKeyDown(VirtualKeyCode.LBUTTON))
+                {
+                    // 打开背包
+                    Simulator.Keyboard.KeyPress(VirtualKeyCode.TAB);
+                    Thread.Sleep(60);
+                    
+                    // 拖动第一个
+                    Simulator.Mouse.MoveMouseTo(8000, 20000);
+                    Simulator.Mouse.LeftButtonDown();
+                    Simulator.Mouse.MoveMouseTo(38000, 20000);
+                    Thread.Sleep(30);
+                    Simulator.Mouse.LeftButtonUp();
+
+                    // 拖动之间的间隔延迟
+                    // 延迟20
+                    Thread.Sleep(20);
+
+                    // 拖动第二个
+                    Simulator.Mouse.MoveMouseTo(8000, 25000);
+                    Simulator.Mouse.LeftButtonDown();
+                    Simulator.Mouse.MoveMouseTo(38000, 20000);
+                    Thread.Sleep(30);
+                    Simulator.Mouse.LeftButtonUp();
+
+                    // 拖动之间的间隔延迟
+                    // 延迟20
+                    Thread.Sleep(20);
+
+                    // 拖动第三个
+                    Simulator.Mouse.MoveMouseTo(8000, 32000);
+                    Simulator.Mouse.LeftButtonDown();
+                    Simulator.Mouse.MoveMouseTo(38000, 20000);
+                    Thread.Sleep(30);
+                    Simulator.Mouse.LeftButtonUp();
+
+                    // 拖动之间的间隔延迟
+                    // 延迟20
+                    Thread.Sleep(20);
+
+                    // 拖动第四个
+                    Simulator.Mouse.MoveMouseTo(8000, 37000);
+                    Simulator.Mouse.LeftButtonDown();
+                    Simulator.Mouse.MoveMouseTo(38000, 20000);
+                    Thread.Sleep(30);
+                    Simulator.Mouse.LeftButtonUp();
+
+                    // 拖动之间的间隔延迟
+                    // 延迟20
+                    Thread.Sleep(20);
+
+                    // 拖动第五个
+                    Simulator.Mouse.MoveMouseTo(8000, 42000);
+                    Simulator.Mouse.LeftButtonDown();
+                    Simulator.Mouse.MoveMouseTo(38000, 20000);
+                    Thread.Sleep(30);
+                    Simulator.Mouse.LeftButtonUp();
+
+                    // 延迟20
+                    Thread.Sleep(50);
+
+                    // 自动按r进行换枪
+                    Simulator.Keyboard.KeyPress(VirtualKeyCode.VK_R);
                 }
             }
         }
